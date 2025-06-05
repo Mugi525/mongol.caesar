@@ -1,9 +1,19 @@
-const alphabet = "АБВГДЕЁЖЗИЙКЛМНОӨПРСТУҮФХЦЧШЩЪЫЬЭЮЯабвгдеёжзийклмноөпрстуүфхцчшщъыьэюя ";
-const maxKey = alphabet.length - 1;
+const alphabets = {
+    mn: "АБВГДЕЁЖЗИЙКЛМНОӨПРСТУҮФХЦЧШЩЪЫЬЭЮЯабвгдеёжзийклмноөпрстуүфхцчшщъыьэюя ",
+    en: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz "
+};
+
+function getAlphabet() {
+    const lang = document.getElementById("language").value;
+    return alphabets[lang];
+}
 
 function shiftText(text, key, decrypt = false) {
-    if (key < 1 || key > maxKey) {
-        return `⚠️ Түлхүүрийг 1-ээс ${maxKey} хүртэл оруулна уу.`;
+    const alphabet = getAlphabet();
+    const maxKey = alphabet.length - 1;
+
+    if (isNaN(key) || key < 1 || key > maxKey) {
+        return `⚠️ Түлхүүрийг 1-ээс ${maxKey} хүртэл тоогоор оруулна уу.`;
     }
 
     let result = "";
@@ -25,14 +35,14 @@ function shiftText(text, key, decrypt = false) {
 
 function encrypt() {
     const text = document.getElementById("inputText").value;
-    const key = parseInt(document.getElementById("key").value, 10);
+    const key = parseInt(document.getElementById("key").value);
     const result = shiftText(text, key, false);
     document.getElementById("outputText").value = result;
 }
 
 function decrypt() {
     const text = document.getElementById("inputText").value;
-    const key = parseInt(document.getElementById("key").value, 10);
+    const key = parseInt(document.getElementById("key").value);
     const result = shiftText(text, key, true);
     document.getElementById("outputText").value = result;
 }
