@@ -1,26 +1,25 @@
-const alphabet = "абвгдеёжзиыйклмнопрстуүфхцчшщъьэюя";
+const alphabet = "АБВГДЕЁЖЗИЙКЛМНОӨПРСТУҮФХЦЧШЩЪЫЬЭЮЯабвгдеёжзийклмноöpрстуүфхцчшщъыьэюя ";
+
+function shiftText(text, shift, decrypt = false) {
+    const direction = decrypt ? -1 : 1;
+    return text.split('').map(char => {
+        let index = alphabet.indexOf(char);
+        if (index === -1) return char;
+        let newIndex = (index + direction * shift + alphabet.length) % alphabet.length;
+        return alphabet[newIndex];
+    }).join('');
+}
 
 function encrypt() {
-    const input = document.getElementById("inputText").value;
-    const shift = parseInt(document.getElementById("shift").value);
-    document.getElementById("outputText").value = caesar(input, shift);
+    const text = document.getElementById('input').value;
+    const shift = parseInt(document.getElementById('shift').value);
+    const result = shiftText(text, shift, false);
+    document.getElementById('output').value = result;
 }
 
 function decrypt() {
-    const input = document.getElementById("inputText").value;
-    const shift = parseInt(document.getElementById("shift").value);
-    document.getElementById("outputText").value = caesar(input, -shift);
-}
-
-function caesar(text, shift) {
-    return text.split('').map(char => {
-        const lowerChar = char.toLowerCase();
-        const isUpperCase = char !== lowerChar;
-        const index = alphabet.indexOf(lowerChar);
-        if (index === -1) return char;
-
-        let newIndex = (index + shift + alphabet.length) % alphabet.length;
-        let resultChar = alphabet[newIndex];
-        return isUpperCase ? resultChar.toUpperCase() : resultChar;
-    }).join('');
+    const text = document.getElementById('input').value;
+    const shift = parseInt(document.getElementById('shift').value);
+    const result = shiftText(text, shift, true);
+    document.getElementById('output').value = result;
 }
