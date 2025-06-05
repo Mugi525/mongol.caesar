@@ -3,7 +3,7 @@ const maxKey = alphabet.length - 1;
 
 function shiftText(text, key, decrypt = false) {
     if (key < 1 || key > maxKey) {
-        return `⚠️ Түлхүүрийг 1-ээс ${maxKey} хүртэл бүхэл тоо оруулна уу.`;
+        return `⚠️ Түлхүүрийг 1-ээс ${maxKey} хүртэл оруулна уу.`;
     }
 
     let result = "";
@@ -23,16 +23,16 @@ function shiftText(text, key, decrypt = false) {
     return result;
 }
 
-document.getElementById("encryptBtn").addEventListener("click", () => {
+function encrypt() {
     const text = document.getElementById("inputText").value;
     const key = parseInt(document.getElementById("key").value, 10);
-    const output = shiftText(text, key);
-    document.getElementById("outputText").value = output;
-});
+    const result = shiftText(text, key, false);
+    document.getElementById("outputText").value = result;
+}
 
-document.getElementById("decryptBtn").addEventListener("click", () => {
+function decrypt() {
     const text = document.getElementById("inputText").value;
     const key = parseInt(document.getElementById("key").value, 10);
-    const output = shiftText(text, key, true);
-    document.getElementById("outputText").value = output;
-});
+    const result = shiftText(text, key, true);
+    document.getElementById("outputText").value = result;
+}
