@@ -1,48 +1,43 @@
-const alphabets = {
-    mn: "АБВГДЕЁЖЗИЙКЛМНОӨПРСТУҮФХЦЧШЩЪЫЬЭЮЯабвгдеёжзийклмноөпрстуүфхцчшщъыьэюя ",
-    en: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz "
-};
+const mongolAlphabet = "абвгдеёжзийклмнопрстуүфхцчшщъыьэюя";
+const englishAlphabet = "abcdefghijklmnopqrstuvwxyz";
 
-function getAlphabet() {
-    const lang = document.getElementById("language").value;
-    return alphabets[lang];
+function shiftChar(char, key, alphabet, direction = 1) {
+  const isUpper = char === char.toUpperCase();
+  const lowerChar = char.toLowerCase();
+  const index = alphabet.indexOf(lowerChar);
+
+  if (index === -1) return char; // not in alphabet
+
+  const shiftedIndex = (index + direction * key + alphabet.length) % alphabet.length;
+  const shiftedChar = alphabet[shiftedIndex];
+  return isUpper ? shiftedChar.toUpperCase() : shiftedChar;
 }
 
-function shiftText(text, key, decrypt = false) {
-    const alphabet = getAlphabet();
-    const maxKey = alphabet.length - 1;
-
-    if (isNaN(key) || key < 1 || key > maxKey) {
-        return `⚠️ Түлхүүрийг 1-ээс ${maxKey} хүртэл тоогоор оруулна уу.`;
-    }
-
-    let result = "";
-    for (let char of text) {
-        let index = alphabet.indexOf(char);
-        if (index === -1) {
-            result += char;
-            continue;
-        }
-
-        let shiftedIndex = decrypt
-            ? (index - key + alphabet.length) % alphabet.length
-            : (index + key) % alphabet.length;
-
-        result += alphabet[shiftedIndex];
-    }
-    return result;
+function processText(text, key, decrypting = false) {
+  const lang = document.getElementById("lang").value;
+  const alphabet = lang === "mn" ? mongolAlphabet : englishAlphabet;
+  const direction = decrypting ? -1 : 1;
+  return [...text].map(c => shiftChar(c, key, alphabet, direction)).join('');
 }
 
 function encrypt() {
-    const text = document.getElementById("inputText").value;
-    const key = parseInt(document.getElementById("key").value);
-    const result = shiftText(text, key, false);
-    document.getElementById("outputText").value = result;
+  const text = document.getElementById("inputText").value;
+  const key = parseInt(document.getElementById("key").value);
+  if (isNaN(key) || key <= 0) {
+    alert("Зөв түлхүүрийн тоо оруулна уу (1-26)");
+    return;
+  }
+  const result = processText(text, key, false);
+  document.getElementById("result").value = result;
 }
 
 function decrypt() {
-    const text = document.getElementById("inputText").value;
-    const key = parseInt(document.getElementById("key").value);
-    const result = shiftText(text, key, true);
-    document.getElementById("outputText").value = result;
+  const text = document.getElementById("inputText").value;
+  const key = parseInt(document.getElementById("key").value);
+  if (isNaN(key) || key <= 0) {
+    alert("Зөв түлхүүрийн тоо оруулна уу (1-26)");
+    return;
+  }
+  const result = processText(text, key, true);
+  document.getElementById("result").value = result;
 }
