@@ -1,43 +1,44 @@
-const mongolAlphabet = "абвгдеёжзийклмнопрстуүфхцчшщъыьэюя";
-const englishAlphabet = "abcdefghijklmnopqrstuvwxyz";
+const mongolAlphabet = 'абвгдеёжзиыйклмнопрстуүфхцчшщъьэюя';
+const englishAlphabet = 'abcdefghijklmnopqrstuvwxyz';
 
-function shiftChar(char, key, alphabet, direction = 1) {
-  const isUpper = char === char.toUpperCase();
-  const lowerChar = char.toLowerCase();
-  const index = alphabet.indexOf(lowerChar);
+function shiftChar(c, key, lang, isEncrypt) {
+    const alphabet = lang === 'mn' ? mongolAlphabet : englishAlphabet;
+    const isUpper = c === c.toUpperCase();
+    const baseChar = c.toLowerCase();
 
-  if (index === -1) return char; // not in alphabet
+    let idx = alphabet.indexOf(baseChar);
+    if (idx === -1) return c;
 
-  const shiftedIndex = (index + direction * key + alphabet.length) % alphabet.length;
-  const shiftedChar = alphabet[shiftedIndex];
-  return isUpper ? shiftedChar.toUpperCase() : shiftedChar;
+    if (!isEncrypt) key = -key;
+
+    let newIndex = (idx + key + alphabet.length) % alphabet.length;
+    let shifted = alphabet[newIndex];
+
+    return isUpper ? shifted.toUpperCase() : shifted;
 }
 
-function processText(text, key, decrypting = false) {
-  const lang = document.getElementById("lang").value;
-  const alphabet = lang === "mn" ? mongolAlphabet : englishAlphabet;
-  const direction = decrypting ? -1 : 1;
-  return [...text].map(c => shiftChar(c, key, alphabet, direction)).join('');
+function processText(isEncrypt) {
+    const text = document.getElementById("inputText").value;
+    const key = parseInt(document.getElementById("key").value);
+    const lang = document.getElementById("language").value;
+
+    if (isNaN(key) || key < 1 || key > 33) {
+        alert("Түлхүүр 1-33 хооронд тоо байх ёстой!");
+        return;
+    }
+
+    let result = '';
+    for (let c of text) {
+        result += shiftChar(c, key, lang, isEncrypt);
+    }
+
+    document.getElementById("outputText").value = result;
 }
 
 function encrypt() {
-  const text = document.getElementById("inputText").value;
-  const key = parseInt(document.getElementById("key").value);
-  if (isNaN(key) || key <= 0) {
-    alert("Зөв түлхүүрийн тоо оруулна уу (1-26)");
-    return;
-  }
-  const result = processText(text, key, false);
-  document.getElementById("result").value = result;
+    processText(true);
 }
 
 function decrypt() {
-  const text = document.getElementById("inputText").value;
-  const key = parseInt(document.getElementById("key").value);
-  if (isNaN(key) || key <= 0) {
-    alert("Зөв түлхүүрийн тоо оруулна уу (1-26)");
-    return;
-  }
-  const result = processText(text, key, true);
-  document.getElementById("result").value = result;
+    processText(false);
 }
