@@ -2,16 +2,30 @@
 <html lang="mn">
 <head>
     <meta charset="UTF-8">
-    <title>Монгол Цезарь Шифр</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Цезарь Шифр</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>Монгол Цезарь Шифр</h1>
+    <h1>Цезарь шифрлэгч</h1>
+
+    <label for="language">Хэл сонгох:</label>
+    <select id="language">
+        <option value="mn">Монгол</option>
+        <option value="en">Англи</option>
+    </select>
+
+    <br><br>
+
     <textarea id="inputText" placeholder="Энд текстээ бичнэ үү..."></textarea><br>
-    <input type="number" id="key" placeholder="Түлхүүр (жишээ нь 3)">
+
+    <input type="number" id="key" placeholder="Түлхүүр (тоо)">
     <br><br>
-    <button onclick="encrypt()">Шифрлэх</button>
-    <button onclick="decrypt()">Тайлж унших</button>
+
+    <button onclick="encrypt()">🔐 Шифрлэх</button>
+    <button onclick="decrypt()">🔓 Тайлж унших</button>
     <br><br>
+
     <textarea id="outputText" placeholder="Үр дүн энд гарна..."></textarea>
 
     <script src="script.js"></script>
