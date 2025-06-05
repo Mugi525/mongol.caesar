@@ -1,25 +1,38 @@
-const alphabet = "АБВГДЕЁЖЗИЙКЛМНОӨПРСТУҮФХЦЧШЩЪЫЬЭЮЯабвгдеёжзийклмноöpрстуүфхцчшщъыьэюя ";
+const alphabet = "АБВГДЕЁЖЗИЙКЛМНОӨПРСТУҮФХЦЧШЩЪЫЬЭЮЯабвгдеёжзийклмноөпрстуүфхцчшщъыьэюя ";
+const maxKey = alphabet.length - 1;
 
-function shiftText(text, shift, decrypt = false) {
-    const direction = decrypt ? -1 : 1;
-    return text.split('').map(char => {
+function shiftText(text, key, decrypt = false) {
+    if (key < 1 || key > maxKey) {
+        return `⚠️ Түлхүүрийг 1-ээс ${maxKey} хүртэл бүхэл тоо оруулна уу.`;
+    }
+
+    let result = "";
+    for (let char of text) {
         let index = alphabet.indexOf(char);
-        if (index === -1) return char;
-        let newIndex = (index + direction * shift + alphabet.length) % alphabet.length;
-        return alphabet[newIndex];
-    }).join('');
+        if (index === -1) {
+            result += char;
+            continue;
+        }
+
+        let shiftedIndex = decrypt
+            ? (index - key + alphabet.length) % alphabet.length
+            : (index + key) % alphabet.length;
+
+        result += alphabet[shiftedIndex];
+    }
+    return result;
 }
 
-function encrypt() {
-    const text = document.getElementById('input').value;
-    const shift = parseInt(document.getElementById('shift').value);
-    const result = shiftText(text, shift, false);
-    document.getElementById('output').value = result;
-}
+document.getElementById("encryptBtn").addEventListener("click", () => {
+    const text = document.getElementById("inputText").value;
+    const key = parseInt(document.getElementById("key").value, 10);
+    const output = shiftText(text, key);
+    document.getElementById("outputText").value = output;
+});
 
-function decrypt() {
-    const text = document.getElementById('input').value;
-    const shift = parseInt(document.getElementById('shift').value);
-    const result = shiftText(text, shift, true);
-    document.getElementById('output').value = result;
-}
+document.getElementById("decryptBtn").addEventListener("click", () => {
+    const text = document.getElementById("inputText").value;
+    const key = parseInt(document.getElementById("key").value, 10);
+    const output = shiftText(text, key, true);
+    document.getElementById("outputText").value = output;
+});
